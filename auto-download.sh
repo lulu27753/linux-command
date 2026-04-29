@@ -52,32 +52,12 @@ for ID in "${VIDEO_IDS[@]}"; do
     echo "========================================"
     echo "🎬 下载：$URL"
     echo "========================================"
-    # 下载最高清视频 + 音频
-    # 合并为 MP4
-    # 下载中文 + 英文字幕（手动 + 自动）
-    # 内嵌 SRT 字幕进视频（所有播放器都能显示）
-    # 同时保存 ASS 字幕文件（美观、可编辑）
-    # yt-dlp -f bestvideo+bestaudio \
-    #     --merge-output-format mp4 \
-    #     --write-sub \
-    #     --write-auto-sub \
-    #     --embed-subs \
-    #     --sub-format srt \
-    #     --convert-subtitles ass \
-    #     --sub-langs zh-Hans,en \
-    #     -o "${OUTPUT_DIR}/%(title)s.%(ext)s" \
-    #     "$URL"
-    # 只要 ASS，不内嵌
     yt-dlp -f bestvideo+bestaudio \
-    --merge-output-format mp4 \
-    --write-auto-sub \
-    --sub-format ass \
-    --sub-langs zh-Hans \
-    --sleep-subtitles 20 \
-    --sleep-interval 10 \
-    --ignore-errors \
-    -o "${OUTPUT_DIR}/%(title)s.%(ext)s" \
-    "$URL"
+        --retries 5 \
+        --fragment-retries 5 \
+        --merge-output-format mp4 \
+        -o "${OUTPUT_DIR}/%(title)s.%(ext)s" \
+        "$URL"
 done
 
 echo -e "\n🎉 全部下载完成！"
