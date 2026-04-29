@@ -68,15 +68,19 @@ for ID in "${VIDEO_IDS[@]}"; do
     #     -o "${OUTPUT_DIR}/%(title)s.%(ext)s" \
     #     "$URL"
     # 只要 ASS，不内嵌
-    yt-dlp -f bestvideo+bestaudio \
-    --merge-output-format mp4 \
-    --write-auto-sub \
-    --sub-format ass \
-    --sub-langs zh-Hans \
-    --sleep-subtitles 20 \
-    --sleep-interval 10 \
-    --ignore-errors \
-    -o "${OUTPUT_DIR}/%(title)s.%(ext)s" \
+    yt-dlp \
+        --skip-download \
+        --write-sub \
+        --write-auto-sub \
+        --sub-format ass \
+        --sub-langs zh-Hans,en \
+        --sleep-interval 10 \
+        --sleep-subtitles 20 \
+        --extractor-retries 5 \
+        --retry-sleep linear=5:30 \
+        --ignore-errors \
+        -o "%(title)s.%(ext)s" \
+        "$1"
 done
 
 echo -e "\n🎉 全部下载完成！"
