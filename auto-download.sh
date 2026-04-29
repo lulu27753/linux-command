@@ -77,6 +77,7 @@ for ID in "${VIDEO_IDS[@]}"; do
     --sleep-interval 10 \
     --ignore-errors \
     -o "${OUTPUT_DIR}/%(title)s.%(ext)s" \
+    "$URL"
 done
 
 echo -e "\n🎉 全部下载完成！"

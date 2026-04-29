@@ -79,8 +79,8 @@ for ID in "${VIDEO_IDS[@]}"; do
         --extractor-retries 5 \
         --retry-sleep linear=5:30 \
         --ignore-errors \
-        -o "%(title)s.%(ext)s" \
-        "$1"
+        -o "${OUTPUT_DIR}/%(title)s.%(ext)s" \
+        "$URL"
 done
 
 echo -e "\n🎉 全部下载完成！"
