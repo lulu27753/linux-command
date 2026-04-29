@@ -69,12 +69,14 @@ for ID in "${VIDEO_IDS[@]}"; do
     #     "$URL"
     # 只要 ASS，不内嵌
     yt-dlp -f bestvideo+bestaudio \
-        --merge-output-format mp4 \
-        --write-sub \
-        --write-auto-sub \
-        --sub-format ass \
-        --sub-langs zh-Hans,en \
-        -o "${OUTPUT_DIR}/%(title)s.%(ext)s" \
+    --merge-output-format mp4 \
+    --write-sub \
+    --write-auto-sub \
+    --sub-format ass \
+    --sub-langs zh-Hans,en \
+    --sleep-subtitles 3 \
+    --no-check-certificate \
+    -o "${OUTPUT_DIR}/%(title)s.%(ext)s" \
         "$URL"
 done
 
