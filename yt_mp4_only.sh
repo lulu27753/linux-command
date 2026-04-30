@@ -2,6 +2,7 @@
 
 # 默认配置
 DEFAULT_OUTPUT_DIR="/root/aria2_download"
+Log_DIR="/root/logs/yt-dlp"
 DEFAULT_BASE_URL="https://www.youtube.com/watch?v="
 
 clear
@@ -41,6 +42,7 @@ fi
 
 # 转为数组
 VIDEO_IDS=($ID_INPUT)
+LOG_FILE="${Log_DIR}/download-$(date +%Y%m%d-%H%M%S).log"
 
 # 开始下载
 echo -e "\n🚀 开始下载..."
@@ -52,27 +54,14 @@ for ID in "${VIDEO_IDS[@]}"; do
     echo "========================================"
     echo "🎬 下载：$URL"
     echo "========================================"
-    # 下载最高清视频 + 音频
-    # 合并为 MP4
-    # 下载中文 + 英文字幕（手动 + 自动）
-    # 内嵌 SRT 字幕进视频（所有播放器都能显示）
-    # 同时保存 ASS 字幕文件（美观、可编辑）
-    # yt-dlp -f bestvideo+bestaudio \
-    #     --merge-output-format mp4 \
-    #     --write-sub \
-    #     --write-auto-sub \
-    #     --embed-subs \
-    #     --sub-format srt \
-    #     --convert-subtitles ass \
-    #     --sub-langs zh-Hans,en \
-    #     -o "${OUTPUT_DIR}/%(title)s.%(ext)s" \
-    #     "$URL"
-    yt-dlp \
-        --skip-download \
-        --write-sub \
-        --sub-langs en \
+    yt-dlp -f bestvideo+bestaudio \
+        --retries 5 \
+        --fragment-retries 5 \
+        --concurrent-fragments 4 \
+        --merge-output-format mp4 \
+        --quiet --no-warnings \
         -o "${OUTPUT_DIR}/%(title)s.%(ext)s" \
-        "$URL"
+        "$URL" >> "${LOG_FILE}" 2>&1 &
 done
 
 echo -e "\n🎉 全部下载完成！"
