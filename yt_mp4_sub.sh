@@ -59,6 +59,7 @@ for ID in "${VIDEO_IDS[@]}"; do
         --fragment-retries 10 \
         --concurrent-fragments 2 \
         --merge-output-format mp4 \
+        --write-sub \
         --quiet --no-warnings \
         -o "${OUTPUT_DIR}/%(title)s.%(ext)s" \
         "$URL" >> "${LOG_FILE}" 2>&1 &

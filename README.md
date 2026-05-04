@@ -26,3 +26,16 @@ chmod +x init.sh
 crontab -e
 0 2 * * * /root/code/linux-command/clean_old_logs.sh >> /root/logs/yt-dlp/clean_log_cron.log 2>&1
 ```
+
+## yt-dlp日志
+打开日志文件，搜索这些关键词：
+- Error
+- Failed
+- HTTP
+- Forbidden
+- Unable to merge
+就能立刻知道原因：
+- 403 Forbidden = IP 被限制
+- Unable to merge = 格式不兼容
+- Fragment missing = 网络波动
+- Unsupported URL = 网站不支持
