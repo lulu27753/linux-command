@@ -39,21 +39,31 @@ if [ ! -d "$OUTPUT_DIR" ]; then
     echo "📂 输出目录不存在，正在创建..."
     mkdir -p "$OUTPUT_DIR"
 fi
+# 判断日志目录是否存在，不存在则创建
+if [ ! -d "$Log_DIR" ]; then
+    echo "📂 日志目录不存在，正在创建..."
+    mkdir -p "$Log_DIR"
+fi
 
 # 转为数组
 VIDEO_IDS=($ID_INPUT)
 LOG_FILE="${Log_DIR}/download-$(date +%Y%m%d-%H%M%S).log"
 
 # 开始下载
-echo -e "\n🚀 开始下载..."
+echo -e "\n🚀 开始后台下载，日志将保存到：${LOG_FILE}"
 echo "📂 输出目录：$OUTPUT_DIR"
 echo ""
+
+# 记录后台进程PID，方便等待
+pids=()
 
 for ID in "${VIDEO_IDS[@]}"; do
     URL="${BASE_URL}${ID}"
     echo "========================================"
-    echo "🎬 下载：$URL"
+    echo "🎬 已加入下载队列：$URL"
     echo "========================================"
+
+    # 后台下载，重定向日志（日志文件会自动创建）
     yt-dlp -f bestvideo+bestaudio \
         --retries 10 \
         --fragment-retries 10 \
@@ -63,6 +73,14 @@ for ID in "${VIDEO_IDS[@]}"; do
         --quiet --no-warnings \
         -o "${OUTPUT_DIR}/%(title)s.%(ext)s" \
         "$URL" >> "${LOG_FILE}" 2>&1 &
+
+    # 保存进程ID
+    pids+=("$!")
 done
 
-echo -e "\n🎉 全部下载完成！"
+# 等待所有后台下载完成
+echo -e "\n⌛ 等待所有下载任务完成..."
+wait "${pids[@]}"
+
+echo -e "\n🎉 全部下载任务处理完成！"
+echo "📄 下载日志：${LOG_FILE}"
